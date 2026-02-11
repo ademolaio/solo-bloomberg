@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Remote 3.14 Docker (sha256:70a63b8ddf4a6637188a1845de5627f33359359e773e746e2c4c05f5f3e09d29)" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote 3.13 Docker (sha256:f086a65e58ccc2e5b9a8199decefd3104fea03d1bf48708caee72db996263009)" project-jdk-type="Python SDK" />
+</project>

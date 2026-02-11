@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY runtime/requirements.txt /app/requirements.txt
 
 RUN python -m pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \

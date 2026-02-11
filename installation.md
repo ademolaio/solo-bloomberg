@@ -34,6 +34,9 @@ runtime/
 docker build -t solo-bloomberg-runtime -f runtime/Dockerfile runtime
 docker run --rm solo-bloomberg-runtime prefect version
 docker run --rm solo-bloomberg-runtime sqlmesh --version
+docker run --rm solo-bloomberg-runtime watchfiles --version
+docker run --rm solo-bloomberg-runtime sse-starlette --version
+
 ```
 
 ## Runtime Structure
@@ -76,8 +79,26 @@ docker run --rm -it \
   solo-bloomberg-runtime \
   sqlmesh plan
 ```
-```text
-When you’re done, paste the output of:  
-ls -la sqlmesh_project
+
+### Step 4 — Run the UI so you can see models + lineage
+
+```bash
+docker run --rm -it \
+  -p 8000:8000 \
+  -v "$PWD/sqlmesh_project:/work" \
+  -w /work \
+  solo-bloomberg-runtime \
+  sqlmesh ui --host 0.0.0.0 --port 8000
+```
+
+
+
+## Change SQLMesh from Prod to Dev
+```bash
+docker run --rm -it \
+  -v "$PWD:/work" \
+  -w /work/sqlmesh_project \
+  solo-bloomberg-runtime \
+  sqlmesh plan dev --include-unmodified
 ```
 

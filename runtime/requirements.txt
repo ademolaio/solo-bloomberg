@@ -1,3 +1,11 @@
 requests
 prefect
-sqlmesh
+watchfiles
+sse-starlette
+pyarrow
+yfinance
+pandas
+pandas
+clickhouse-connect
+pydantic-settings
+tqdm
