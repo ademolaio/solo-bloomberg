@@ -1,4 +1,17 @@
 services:
+  runtime:
+    build:
+      context: .
+      dockerfile: runtime/Dockerfile
+    container_name: solo_runtime
+    depends_on:
+      - clickhouse
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - solo_net
+
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: solo_clickhouse
