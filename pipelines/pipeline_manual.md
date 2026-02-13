@@ -377,3 +377,6 @@ solo-bloomberg/
 │   │
 │   └── pipeline_manual.md
 ```
+
+
+fundamental_data.financial_ratios

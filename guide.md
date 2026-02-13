@@ -205,7 +205,13 @@ solo-bloomberg/
 │   │   ├── income_statement.py
 │   │   ├── balance_sheet.py
 │   │   ├── cashflow_statement.py
-│   │   └── financial_ratios.py
+│   │   └── financial_ratios.py  
+|
+
+
+|   ├── 35_financial_ratios/
+│   │   ├── financial_ratios_core.py
+│   │   ├── build_ratios.py
 │   │
 │   ├── 40_macro_series/
 │   │   ├── fred_ingestion.py
@@ -248,4 +254,81 @@ solo-bloomberg/
 │
 ├── docker-compose.yml
 └── README.md
+```
+
+```dockerfile
+  superset_db:
+    image: postgres:16
+    container_name: solo_superset_db
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - superset_db_data:/var/lib/postgresql/data
+    networks:
+      - solo_net
+
+  superset_redis:
+    image: redis:7
+    container_name: solo_superset_redis
+    networks:
+      - solo_net
+
+  # One-time initializer (creates tables + admin user)
+  superset_init:
+    build:
+      context: ./superset
+      dockerfile: Dockerfile
+    container_name: solo_superset_init
+    depends_on:
+      - superset_db
+      - superset_redis
+    environment:
+      SUPERSET_ENV: production
+      SUPERSET_SECRET_KEY: "change-me-to-a-long-random-string"
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://superset:superset@superset_db:5432/superset
+      REDIS_HOST: superset_redis
+      REDIS_PORT: 6379
+
+      SUPERSET_ADMIN_USERNAME: admin
+      SUPERSET_ADMIN_PASSWORD: admin
+      SUPERSET_ADMIN_FIRSTNAME: Solo
+      SUPERSET_ADMIN_LASTNAME: Bloomberg
+      SUPERSET_ADMIN_EMAIL: admin@local
+    volumes:
+      - superset_home:/app/superset_home
+      - ./superset/superset-init.sh:/superset-init.sh:ro
+    command: [ "/bin/bash", "/superset-init.sh" ]
+    networks:
+      - solo_net
+    restart: "no"
+
+  superset:
+    build:
+      context: ./superset
+      dockerfile: Dockerfile
+    container_name: solo_superset
+    depends_on:
+      - superset_db
+      - superset_redis
+      - clickhouse
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_ENV: production
+      SUPERSET_SECRET_KEY: "change-me-to-a-long-random-string"
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://superset:superset@superset_db:5432/superset
+      REDIS_HOST: superset_redis
+      REDIS_PORT: 6379
+    volumes:
+      - superset_home:/app/superset_home
+    command: [ "gunicorn", "--bind", "0.0.0.0:8088", "superset.app:create_app()" ]
+    networks:
+      - solo_net
+      
+  
+volumes:
+  superset_db_data:
+  superset_home:
 ```
