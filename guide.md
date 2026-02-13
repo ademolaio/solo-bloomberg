@@ -1,98 +1,152 @@
-# solo-bloomberg
+# SOLO BLOOMBERG
 
-A self-hosted, containerized analytics platform built with a strict, reproducible runtime.
-The system uses Docker as the **only** Python environment—no virtual environments, no host installs.
+## Institutional-Grade Personal Market Intelligence System
 
----
+------------------------------------------------------------------------
 
-## Runtime (Docker) — Locked
+# 1. PURPOSE
 
-The runtime defines **how all code executes**.  
-It is immutable, reproducible, and shared by all tools (Prefect, SQLMesh, etc.).
+Solo Bloomberg is a deterministic, multi-layer financial data
+architecture designed to:
 
-### Principles
+-   Ingest global market data
+-   Build multi-timeframe OHLCV models
+-   Integrate fundamental data
+-   Integrate macroeconomic data
+-   Construct factors
+-   Generate signals
+-   Support portfolio-level decision logic
 
-- Docker image = Python environment
-- `Dockerfile` = execution contract
-- `requirements.txt` = dependency truth
-- No `python -m venv`
-- No `pip install` on host
-- No installing packages in running containers
-- Rebuild image to change runtime state
+------------------------------------------------------------------------
 
----
+# 2. ARCHITECTURAL PHILOSOPHY
 
-## Creating the databases
-### market_data
-```text
-Raw/cleaned time-series: prices, OHLCV, corporate actions (splits/dividends), 
-futures continuous series, options chains snapshots (if you go there).
-```
+1.  Raw data is immutable\
+2.  Aggregations are deterministic\
+3.  No duplicate tolerance\
+4.  Domain separation is strict\
+5.  Views are used for analytics consumption\
+6.  Every layer depends only on the layer beneath it
 
-```sql
-CREATE DATABASE IF NOT EXISTS market_data;
-```
+------------------------------------------------------------------------
 
-### economic_data
-```text
-Macro series (FRED, ECB, OECD, etc.), calendar/event metadata, releases, revisions (if you model them).
-```
+# 3. LAYERED ARCHITECTURE
 
-```sql
-CREATE DATABASE IF NOT EXISTS economic_data;
-```
+## Layer 0 --- Infrastructure
 
-### fundamental_data
-```text
-Financial statements, ratios, estimates (if you add), corporate profiles, sector/industry mappings.
-```
+-   ClickHouse
+-   Docker / Docker Compose
+-   Runtime container
+-   Bootstrap DDL
 
-```sql
-CREATE DATABASE IF NOT EXISTS fundamental_data;
+------------------------------------------------------------------------
 
-```
+## Layer 1 --- Raw Data
 
-### quant_data
-```text
-Derived features + signals: returns, vol, z-scores, breadth metrics, factor exposures, 
-regime labels, model outputs. (This is your “physics layer”.)
-```
+### market_data.daily_prices
 
-```sql
-CREATE DATABASE IF NOT EXISTS quant_data;
+-   instrument_id
+-   date
+-   open
+-   high
+-   low
+-   close
+-   adj_close
+-   volume
+-   source
+-   ingested_at
+-   batch_id
 
-```
+------------------------------------------------------------------------
 
-### meta_data
-```text
-Operational control plane: tickers/master instrument table, source lineage, 
-ingestion runs, data quality checks, last_updated timestamps, error logs, 
-symbol mapping (ISIN ↔ ticker), etc.
-```
+## Fundamentals Schema
 
-```sql
-CREATE DATABASE IF NOT EXISTS meta_data;
+Schema: `fundamentals`
 
-```
+-   income_statements
+-   balance_sheets
+-   cash_flows
+-   key_metrics
 
-### trade_data
-```text
-Execution and portfolio layer: orders (submitted/canceled), fills (executed trades), 
-position states (live + paper), realized/unrealized PnL, margin usage, cash movements, 
-portfolio snapshots, strategy attribution tags, and risk metrics (exposure, Greeks, drawdown).
-```
+------------------------------------------------------------------------
 
-```sql
-CREATE DATABASE IF NOT EXISTS trade_data;
-```
----
+## Macro Schema
 
+Schema: `macro`
 
-docker compose exec runtime bash -lc \
-"python -m pipelines.10_ingest_yfinance.backfill_ingestion"
+-   interest_rates
+-   cpi
+-   gdp
+-   unemployment
+-   money_supply
+-   yield_curves
+-   fx_rates
 
-docker compose exec runtime bash -lc \
-"python -m pipelines.10_ingest_yfinance.daily_ingestion"
+------------------------------------------------------------------------
 
+# 4. LAYER 2 --- AGGREGATED MODELS
 
-docker compose exec runtime bash -lc "python -m pipelines.10_ingest_yfinance.daily_ingestion"
+Derived strictly from `market_data.daily_prices`
+
+Tables:
+
+-   weekly_prices
+-   monthly_prices
+-   quarterly_prices
+-   yearly_prices
+-   quinquennial_prices
+
+All use AggregatingMergeTree.
+
+------------------------------------------------------------------------
+
+# 5. LAYER 3 --- INDICATORS
+
+Schema: `indicators`
+
+Examples:
+
+-   rsi
+-   atr
+-   macd
+-   moving_averages
+-   bollinger_bands
+
+------------------------------------------------------------------------
+
+# 6. LAYER 4 --- FACTORS
+
+Schema: `factors`
+
+Examples:
+
+-   value
+-   momentum
+-   quality
+-   carry
+-   term_premium
+
+------------------------------------------------------------------------
+
+# 7. LAYER 5 --- SIGNAL ENGINE
+
+Schema: `signals`
+
+Examples:
+
+-   mean_reversion
+-   trend_following
+-   macro_regime
+-   volatility_regime
+
+------------------------------------------------------------------------
+
+# 8. DATA FLOW
+
+Raw → Aggregations → Indicators → Factors → Signals → Portfolio
+
+------------------------------------------------------------------------
+
+# 9. LONG-TERM VISION
+
+A deterministic macro-quant research and execution framework.

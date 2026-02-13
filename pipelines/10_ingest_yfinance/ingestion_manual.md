@@ -1,13 +1,28 @@
 # Ingestion Checks
 
-This is where you check if the both backfill and daily ingestions work.
+This is where you check if the both backfill and daily ingestion worked.
+---
+
+## Backfill & Daily scripts
+
+### 1) Backfill Ingestion
+
+```dockerfile
+docker compose exec runtime bash -lc \
+"python -m pipelines.10_ingest_yfinance.backfill_ingestion"
+```
+
+### 2) Daily Ingestion
+
+```dockerfile
+docker compose exec runtime bash -lc \
+"python -m pipelines.10_ingest_yfinance.daily_ingestion"
+```
 
 ---
 
-## Runtime (Docker) — Locked
 
-The runtime defines **how all code executes**.  
-It is immutable, reproducible, and shared by all tools (Prefect, SQLMesh, etc.).
+## Sanity Checks
 
 ### 1) Check duplicates (raw, not merged yet)
 

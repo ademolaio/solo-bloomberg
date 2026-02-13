@@ -1,4 +1,4 @@
-from .core import ingest_symbol
+from .ingestion_core import ingest_symbol
 from .symbols.all import ALL_SYMBOLS
 import clickhouse_connect
 

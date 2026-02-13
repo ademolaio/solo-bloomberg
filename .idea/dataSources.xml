@@ -4,7 +4,7 @@
     <data-source source="LOCAL" name="solo-bloomberg" uuid="067c9090-dfb7-437e-8d3a-d96dd2740fed">
       <driver-ref>clickhouse</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.clickhouse.jdbc.ClickHouseDriver</jdbc-driver>
+      <jdbc-driver>ru.yandex.clickhouse.ClickHouseDriver</jdbc-driver>
       <jdbc-url>jdbc:clickhouse://localhost:8123</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
