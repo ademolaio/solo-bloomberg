@@ -86,9 +86,9 @@ This supports macro-quant analysis.
 
 Sub-structure:
 
-20_aggregations/ ├── sql/ │ ├── 00_weekly_prices.sql │ ├──
-01_monthly_prices.sql │ ├── 02_quarterly_prices.sql │ ├──
-03_yearly_prices.sql │ ├── 04_quinquennial_prices.sql │ └──
+20_aggregations/ ├── sql/ │ ├── 20_weekly_prices.sql │ ├──
+21_monthly_prices.sql │ ├── 22_quarterly_prices.sql │ ├──
+23_yearly_prices.sql │ ├── 04_quinquennial_prices.sql │ └──
 05_decennial_prices.sql ├── weekly.py ├── monthly.py ├── quarterly.py
 ├── yearly.py ├── quinquennial.py └── aggregation_core.py
 

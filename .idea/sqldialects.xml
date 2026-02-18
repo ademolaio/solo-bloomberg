@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$PROJECT_DIR$/pipelines/00_bootstrap_clickhouse/sql/04_meta_futures_continuous.sql" dialect="ClickHouse" />
-    <file url="file://$PROJECT_DIR$/pipelines/00_bootstrap_clickhouse/sql/05_market_daily_prices.sql" dialect="ClickHouse" />
-    <file url="file://$PROJECT_DIR$/pipelines/00_bootstrap_clickhouse/sql/06_views.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/pipelines/20_aggregations/weekly.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/pipelines/series_00_bootstrap_clickhouse/sql/04_meta_futures_continuous.sql" dialect="ClickHouse" />
+    <file url="file://$PROJECT_DIR$/pipelines/series_00_bootstrap_clickhouse/sql/05_market_daily_prices.sql" dialect="ClickHouse" />
+    <file url="file://$PROJECT_DIR$/pipelines/series_00_bootstrap_clickhouse/sql/06_views.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/pipelines/series_20_aggregations/weekly.py" dialect="GenericSQL" />
     <file url="PROJECT" dialect="ClickHouse" />
   </component>
 </project>
